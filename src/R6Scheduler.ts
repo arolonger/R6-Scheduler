@@ -1,16 +1,26 @@
-class R6Scheduler {
-    constructor (params) {
-        this.fns = dateFns;
+import { getDaysInMonth, isMonday, isTuesday, isWednesday, isThursday, isFriday, isSaturday, isSunday } from "date-fns";
+
+export default class R6Scheduler {
+    dom: Element;
+    currentDate: Date;
+    locale: string;
+    numerOfDaysInCurrentMonth: number;
+    monthName: string;
+    dayNumber: number;
+    monthNumber: number;
+    yearNumber: number;
+
+    constructor (params: any) {
         this.dom = params.container;
         this.currentDate = params.currentDate;
         this.locale = "pl-PL";
-
-        this.numerOfDaysInCurrentMonth = this.fns.getDaysInMonth(this.currentDate);
+        
+        this.numerOfDaysInCurrentMonth = getDaysInMonth(this.currentDate);
         this.monthName = this._getMonthName(this.currentDate);
         
-        this.dayNumber = this.fns.getDate(this.currentDate);
-        this.monthNumber = this.fns.getMonth(this.currentDate);
-        this.yearNumber = this.fns.getYear(this.currentDate);
+        this.dayNumber = this.currentDate.getDate();
+        this.monthNumber = this.currentDate.getMonth();
+        this.yearNumber = this.currentDate.getFullYear();
         
         this.dom.appendChild(this._drawTopHeader());
         this.dom.appendChild(this._drawHeader());
@@ -29,7 +39,7 @@ class R6Scheduler {
         return weekDays;
     }
 
-    _getMonthName(date) {
+    _getMonthName(date: Date) {
         return date.toLocaleString(this.locale, { month: "long"}).toUpperCase();
     }
 
@@ -63,10 +73,10 @@ class R6Scheduler {
         const beginGap = this._findGaps(1);
         this._drawGap(beginGap, daysWrapper);
 
-        for (var i = 1; i <= this.numerOfDaysInCurrentMonth; i++) {
+        for (var i:number = 1; i <= this.numerOfDaysInCurrentMonth; i++) {
             var day = document.createElement("div");
             day.classList.add("r6-day");
-            day.appendChild(document.createTextNode(i));
+            day.appendChild(document.createTextNode(String(i)));
             daysWrapper.appendChild(day);
         }
 
@@ -76,7 +86,7 @@ class R6Scheduler {
         return daysWrapper;
     }
 
-    _drawGap (gap, daysWrapper) {
+    _drawGap (gap: number, daysWrapper: Element) {
         if (gap !== 0) {
             for (let i = 1; i <= gap; i++) {
                 const emptyDay = document.createElement("div");
@@ -88,53 +98,53 @@ class R6Scheduler {
         }
     }
 
-    _findGaps (dayNumber) {
+    _findGaps (dayNumber: number) :any {
         let date = new Date(this.yearNumber, this.monthNumber, dayNumber);
         let gap = 0;
 
         if (dayNumber === 1) {
-            if (this.fns.isMonday(date)) {
+            if (isMonday(date)) {
                 return gap;
-            } else if(this.fns.isTuesday(date)) {
+            } else if(isTuesday(date)) {
                 gap += 1;
                 return gap;
-            } else if (this.fns.isWednesday(date)) {
+            } else if (isWednesday(date)) {
                 gap += 2;
                 return gap;
-            } else if (this.fns.isThursday(date)) {
+            } else if (isThursday(date)) {
                 gap += 3;
                 return gap;
-            } else if (this.fns.isFriday(date)) {
+            } else if (isFriday(date)) {
                 gap += 4;
                 return gap;
-            } else if (this.fns.isSaturday(date)) {
+            } else if (isSaturday(date)) {
                 gap += 5;
                 return gap;
-            } else if (this.fns.isSunday(date)) {
+            } else if (isSunday(date)) {
                 gap += 6;
                 return gap;
             }
         } else {
             //looking for last day
-            
-            if (this.fns.isSunday(date)) {
+
+            if (isSunday(date)) {
                 return gap;
-            } else if(this.fns.isSaturday(date)) {
+            } else if(isSaturday(date)) {
                 gap += 1;
                 return gap;
-            } else if (this.fns.isFriday(date)) {
+            } else if (isFriday(date)) {
                 gap += 2;
                 return gap;
-            } else if (this.fns.isThursday(date)) {
+            } else if (isThursday(date)) {
                 gap += 3;
                 return gap;
-            } else if (this.fns.isWednesday(date)) {
+            } else if (isWednesday(date)) {
                 gap += 4;
                 return gap;
-            } else if (this.fns.isTuesday(date)) {
+            } else if (isTuesday(date)) {
                 gap += 5;
                 return gap;
-            } else if (this.fns.isMonday(date)) {
+            } else if (isMonday(date)) {
                 gap += 6;
                 return gap;
             }

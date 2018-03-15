@@ -34,14 +34,14 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.0.0-alpha0/date_fns.js"></script>
-    <script src="../src/R6Scheduler.js"></script>
-
+    <script src="../build/R6Scheduler.js"></script>
+    
     <script>
-        new R6Scheduler({
-            container: document.querySelector(".r6-scheduler"),
-            currentDate: new Date()
-        });
+    new R6Scheduler.init({
+        container: document.querySelector(".r6-scheduler"),
+        currentDate: new Date
+    });
     </script>
+    
 </body>
 </html>
