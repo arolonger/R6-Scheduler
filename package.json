@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",    
+    "start": "webpack-dev-server --open"
   },
   "repository": {
     "type": "git",
@@ -17,12 +18,17 @@
     "url": "https://github.com/arolonger/R6-Scheduler/issues"
   },
   "homepage": "https://github.com/arolonger/R6-Scheduler#readme",
+  "dependencies": {
+    "date-fns": "^date-fns@2.0.0-alpha.6"
+  },
   "devDependencies": {
     "babel-loader": "^7.1.4",
+    "date-fns": "^date-fns@2.0.0-alpha.6",
     "ts-loader": "^4.0.1",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.2.3",
     "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12"
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^3.1.1"
   }
 }

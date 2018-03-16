@@ -1,5 +1,6 @@
 const path = require('path');
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.ts',
@@ -14,7 +15,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ],
+    extensions: [ '*', '.tsx', '.ts', '.js' ],
     modules: [path.resolve(__dirname, "src"), "node_modules"]
   },
   output: {
@@ -23,8 +24,14 @@ module.exports = {
     library: "R6Scheduler",
     libraryTarget: "var"
   },
+  devServer: {
+    contentBase: './',
+    // hot: true
+  },
   mode: "development",
-  // plugins: [
-  //   new UglifyJSPlugin()
-  // ]
+  plugins: [    
+    // new webpack.NamedModulesPlugin(),
+    // new webpack.HotModuleReplacementPlugin()
+    // new UglifyJSPlugin()
+  ]
 };

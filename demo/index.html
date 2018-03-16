@@ -12,11 +12,24 @@
         width: 245px;
         margin: 0 auto;
     }
+    .r6-month-name {
+        text-align: center;
+    }
+    .r6-prev-month:before {
+        content: "<";
+    }
+    .r6-next-month:before {
+        content: ">";
+    }
     .r6-cell,
     .r6-day {
         display: inline-block;
         width: calc(100%/7);
         text-align: center;
+    }
+    .r6-day.r6-empty-day,
+    .r6-day.r6-different-month-day {
+        color: gray;
     }
     </style>
 </head>
@@ -39,7 +52,8 @@
     <script>
     new R6Scheduler.init({
         container: document.querySelector(".r6-scheduler"),
-        currentDate: new Date
+        initialDate: new Date,
+        fillGaps: true
     });
     </script>
     

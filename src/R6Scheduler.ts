@@ -1,8 +1,24 @@
-import helpers from "../src/helpers/helpers";
+// import helpers from "../src/helpers/helpers";
+
+// import {isTuesday, isWednesday, isThursday, isFriday, isSaturday, isSunday, getDaysInMonth} from 'date-fns/esm';
+
+import * as isMonday from "date-fns/isMonday";
+import * as isTuesday from "date-fns/isTuesday";
+import * as isWednesday from "date-fns/isWednesday";
+import * as isThursday from "date-fns/isThursday";
+import * as isFriday from "date-fns/isFriday";
+import * as isSaturday from "date-fns/isSaturday";
+import * as isSunday from "date-fns/isSunday";
+import * as getDaysInMonth from "date-fns/getDaysInMonth";
+import * as addMonths from "date-fns/addMonths";
+import * as addDays from "date-fns/addDays";
+import * as lastDayOfMonth from "date-fns/lastDayOfMonth";
 
 export default class R6Scheduler {
     dom: Element;
+    _wholeHtmlContainer: Element;
     currentDate: Date;
+    fillGaps: boolean;
     locale: string;
     numerOfDaysInCurrentMonth: number;
     monthName: string;
@@ -12,19 +28,39 @@ export default class R6Scheduler {
 
     constructor (params: any) {
         this.dom = params.container;
-        this.currentDate = params.currentDate;
+        this.currentDate = this._setDateWithFirstDay(params.initialDate);
+        this.fillGaps = params.fillGaps;
         this.locale = "pl-PL";
+
+        this._generate(this.currentDate)
+    }
+
+    _setDateWithFirstDay (date: Date):Date {        
+        this.dayNumber = 1;
+        this.monthNumber = date.getMonth();
+        this.yearNumber = date.getFullYear();
+
+        return new Date(this.yearNumber, this.monthNumber, this.dayNumber);
+    }
+
+    _generate (date: Date):void {       
+        let wholeHtmlContainer = document.createElement("div"); 
+        this.numerOfDaysInCurrentMonth = getDaysInMonth(date);
+        this.monthName = this._getMonthName(date);
+
+        this.currentDate = this._setDateWithFirstDay(date);
         
-        this.numerOfDaysInCurrentMonth = helpers.getDaysInMonth(this.currentDate);
-        this.monthName = this._getMonthName(this.currentDate);
-        
-        this.dayNumber = this.currentDate.getDate();
-        this.monthNumber = this.currentDate.getMonth();
-        this.yearNumber = this.currentDate.getFullYear();
-        
-        this.dom.appendChild(this._drawTopHeader());
-        this.dom.appendChild(this._drawHeader());
-        this.dom.appendChild(this._drawDays());
+        wholeHtmlContainer.appendChild(this._drawTopHeader());
+        wholeHtmlContainer.appendChild(this._drawHeader());
+        wholeHtmlContainer.appendChild(this._drawDays());
+        this._finalDraw(wholeHtmlContainer);
+    }
+
+    _finalDraw (wholeHtmlToRender: Element) {
+        if (this.dom.firstChild) {
+            this.dom.removeChild(this.dom.firstChild);
+        }
+        this.dom.appendChild(wholeHtmlToRender);
     }
     
     _getWeekDays() {
@@ -43,10 +79,28 @@ export default class R6Scheduler {
         return date.toLocaleString(this.locale, { month: "long"}).toUpperCase();
     }
 
+    _prevMonth() {
+        this._generate(addMonths(this.currentDate, -1));
+    }
+
+    _nextMonth() {
+        this._generate(addMonths(this.currentDate, 1));
+    }
+
     _drawTopHeader () {
         const wrapper = document.createElement("div");
+        const prev = document.createElement("span");
+        const next = document.createElement("span");
+
         wrapper.classList.add("r6-month-name");
+        prev.classList.add("r6-prev-month");
+        next.classList.add("r6-next-month");
+
+        wrapper.appendChild(prev);
         wrapper.appendChild(document.createTextNode(this.monthName));
+        wrapper.appendChild(next);
+        prev.addEventListener("click", this._prevMonth.bind(this));
+        next.addEventListener("click", this._nextMonth.bind(this));
 
         return wrapper;
     }
@@ -70,8 +124,8 @@ export default class R6Scheduler {
     _drawDays () {
         const daysWrapper = document.createElement("div");
         
-        const beginGap = this._findGaps(1);
-        this._drawGap(beginGap, daysWrapper);
+        const beginGap = this._findNumberOfDaysToFillUpGap(1);
+        this._drawGap(beginGap, daysWrapper, "begin");
 
         for (var i:number = 1; i <= this.numerOfDaysInCurrentMonth; i++) {
             var day = document.createElement("div");
@@ -80,74 +134,81 @@ export default class R6Scheduler {
             daysWrapper.appendChild(day);
         }
 
-        const endGap = this._findGaps(this.numerOfDaysInCurrentMonth);
-        this._drawGap(endGap, daysWrapper);
+        const endGap = this._findNumberOfDaysToFillUpGap(this.numerOfDaysInCurrentMonth);
+        this._drawGap(endGap, daysWrapper, "end");
 
         return daysWrapper;
     }
 
-    _drawGap (gap: number, daysWrapper: Element) {
+    _drawGap (gap: number, daysWrapper: Element, direction: string) {
         if (gap !== 0) {
             for (let i = 1; i <= gap; i++) {
                 const emptyDay = document.createElement("div");
                 emptyDay.classList.add("r6-day");
-                emptyDay.classList.add("r6-empty-day");
-                emptyDay.appendChild(document.createTextNode("-"));
+                
+                if (this.fillGaps) {
+                    emptyDay.classList.add("r6-different-month-day");
+                    let valueToInsert = this._setCorrectDayValue(gap, i, direction);
+                    console.log(valueToInsert);
+                    emptyDay.appendChild(document.createTextNode(String(valueToInsert)));
+                } else {
+                    emptyDay.classList.add("r6-empty-day");
+                    emptyDay.appendChild(document.createTextNode("-"));
+                }
+
                 daysWrapper.appendChild(emptyDay);
             }
         }
     }
 
-    _findGaps (dayNumber: number) :any {
+    _setCorrectDayValue (numberOfElementsToGenerate:number, elementIndex: number, direction: string) {
+        let newDateToShareDayNumber;
+        if (direction === "begin") {
+            newDateToShareDayNumber = addDays(this.currentDate, -numberOfElementsToGenerate + elementIndex -1);
+        } else if (direction === "end") {
+            newDateToShareDayNumber = addDays(lastDayOfMonth(this.currentDate), elementIndex);
+        }
+
+        return newDateToShareDayNumber.getDate();
+    }
+
+    _findNumberOfDaysToFillUpGap (dayNumber: number) :any {
         let date = new Date(this.yearNumber, this.monthNumber, dayNumber);
         let gap = 0;
 
         if (dayNumber === 1) {
-            if (helpers.isMonday(date)) {
-                return gap;
-            } else if(helpers.isTuesday(date)) {
+            if (isMonday(date)) {
+            } else if(isTuesday(date)) {
                 gap += 1;
-                return gap;
-            } else if (helpers.isWednesday(date)) {
+            } else if (isWednesday(date)) {
                 gap += 2;
-                return gap;
-            } else if (helpers.isThursday(date)) {
+            } else if (isThursday(date)) {
                 gap += 3;
-                return gap;
-            } else if (helpers.isFriday(date)) {
+            } else if (isFriday(date)) {
                 gap += 4;
-                return gap;
-            } else if (helpers.isSaturday(date)) {
+            } else if (isSaturday(date)) {
                 gap += 5;
-                return gap;
-            } else if (helpers.isSunday(date)) {
+            } else if (isSunday(date)) {
                 gap += 6;
-                return gap;
             }
         } else {
             //looking for last day
-
-            if (helpers.isSunday(date)) {
-                return gap;
-            } else if(helpers.isSaturday(date)) {
+            if (isSunday(date)) {
+            } else if(isSaturday(date)) {
                 gap += 1;
-                return gap;
-            } else if (helpers.isFriday(date)) {
+            } else if (isFriday(date)) {
                 gap += 2;
-                return gap;
-            } else if (helpers.isThursday(date)) {
+            } else if (isThursday(date)) {
                 gap += 3;
-                return gap;
-            } else if (helpers.isWednesday(date)) {
+            } else if (isWednesday(date)) {
                 gap += 4;
-                return gap;
-            } else if (helpers.isTuesday(date)) {
+            } else if (isTuesday(date)) {
                 gap += 5;
-                return gap;
-            } else if (helpers.isMonday(date)) {
+            } else if (isMonday(date)) {
                 gap += 6;
-                return gap;
             }
         }
+        
+        return gap;
     }
 }
