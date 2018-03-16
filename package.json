@@ -17,12 +17,8 @@
     "url": "https://github.com/arolonger/R6-Scheduler/issues"
   },
   "homepage": "https://github.com/arolonger/R6-Scheduler#readme",
-  "dependencies": {
-    "date-fns": "^1.29.0"
-  },
   "devDependencies": {
     "babel-loader": "^7.1.4",
-    "date-fns": "^1.29.0",
     "ts-loader": "^4.0.1",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.2.3",

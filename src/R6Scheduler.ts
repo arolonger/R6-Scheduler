@@ -1,4 +1,4 @@
-import { getDaysInMonth, isMonday, isTuesday, isWednesday, isThursday, isFriday, isSaturday, isSunday } from "date-fns";
+import helpers from "../src/helpers/helpers";
 
 export default class R6Scheduler {
     dom: Element;
@@ -15,7 +15,7 @@ export default class R6Scheduler {
         this.currentDate = params.currentDate;
         this.locale = "pl-PL";
         
-        this.numerOfDaysInCurrentMonth = getDaysInMonth(this.currentDate);
+        this.numerOfDaysInCurrentMonth = helpers.getDaysInMonth(this.currentDate);
         this.monthName = this._getMonthName(this.currentDate);
         
         this.dayNumber = this.currentDate.getDate();
@@ -103,48 +103,48 @@ export default class R6Scheduler {
         let gap = 0;
 
         if (dayNumber === 1) {
-            if (isMonday(date)) {
+            if (helpers.isMonday(date)) {
                 return gap;
-            } else if(isTuesday(date)) {
+            } else if(helpers.isTuesday(date)) {
                 gap += 1;
                 return gap;
-            } else if (isWednesday(date)) {
+            } else if (helpers.isWednesday(date)) {
                 gap += 2;
                 return gap;
-            } else if (isThursday(date)) {
+            } else if (helpers.isThursday(date)) {
                 gap += 3;
                 return gap;
-            } else if (isFriday(date)) {
+            } else if (helpers.isFriday(date)) {
                 gap += 4;
                 return gap;
-            } else if (isSaturday(date)) {
+            } else if (helpers.isSaturday(date)) {
                 gap += 5;
                 return gap;
-            } else if (isSunday(date)) {
+            } else if (helpers.isSunday(date)) {
                 gap += 6;
                 return gap;
             }
         } else {
             //looking for last day
 
-            if (isSunday(date)) {
+            if (helpers.isSunday(date)) {
                 return gap;
-            } else if(isSaturday(date)) {
+            } else if(helpers.isSaturday(date)) {
                 gap += 1;
                 return gap;
-            } else if (isFriday(date)) {
+            } else if (helpers.isFriday(date)) {
                 gap += 2;
                 return gap;
-            } else if (isThursday(date)) {
+            } else if (helpers.isThursday(date)) {
                 gap += 3;
                 return gap;
-            } else if (isWednesday(date)) {
+            } else if (helpers.isWednesday(date)) {
                 gap += 4;
                 return gap;
-            } else if (isTuesday(date)) {
+            } else if (helpers.isTuesday(date)) {
                 gap += 5;
                 return gap;
-            } else if (isMonday(date)) {
+            } else if (helpers.isMonday(date)) {
                 gap += 6;
                 return gap;
             }
