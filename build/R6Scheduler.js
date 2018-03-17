@@ -1066,12 +1066,12 @@ __webpack_require__.r(__webpack_exports__);
 var R6Scheduler = /** @class */ (function () {
     function R6Scheduler(params) {
         this.dom = params.container;
-        this.currentDate = this._setDateWithFirstDay(params.initialDate);
+        this.currentDate = this._overwriteCurrentDate(params.initialDate);
         this.fillGaps = params.fillGaps;
-        this.locale = "pl-PL";
+        this.locales = params.locales || [];
         this._generate(this.currentDate);
     }
-    R6Scheduler.prototype._setDateWithFirstDay = function (date) {
+    R6Scheduler.prototype._overwriteCurrentDate = function (date) {
         this.dayNumber = 1;
         this.monthNumber = date.getMonth();
         this.yearNumber = date.getFullYear();
@@ -1081,9 +1081,9 @@ var R6Scheduler = /** @class */ (function () {
         var wholeHtmlContainer = document.createElement("div");
         this.numerOfDaysInCurrentMonth = date_fns_getDaysInMonth__WEBPACK_IMPORTED_MODULE_7__(date);
         this.monthName = this._getMonthName(date);
-        this.currentDate = this._setDateWithFirstDay(date);
+        this.currentDate = this._overwriteCurrentDate(date);
         wholeHtmlContainer.appendChild(this._drawTopHeader());
-        wholeHtmlContainer.appendChild(this._drawHeader());
+        wholeHtmlContainer.appendChild(this._drawWeekDays());
         wholeHtmlContainer.appendChild(this._drawDays());
         this._finalDraw(wholeHtmlContainer);
     };
@@ -1097,13 +1097,13 @@ var R6Scheduler = /** @class */ (function () {
         var baseDate = new Date(Date.UTC(2017, 0, 2)); // Monday
         var weekDays = [];
         for (var i = 0; i < 7; i++) {
-            weekDays.push(baseDate.toLocaleDateString(this.locale, { weekday: 'narrow' }));
+            weekDays.push(baseDate.toLocaleDateString(this.locales, { weekday: 'narrow' }));
             baseDate.setDate(baseDate.getDate() + 1);
         }
         return weekDays;
     };
     R6Scheduler.prototype._getMonthName = function (date) {
-        return date.toLocaleString(this.locale, { month: "long" }).toUpperCase();
+        return date.toLocaleString(this.locales, { month: "long" }).toUpperCase();
     };
     R6Scheduler.prototype._prevMonth = function () {
         this._generate(date_fns_addMonths__WEBPACK_IMPORTED_MODULE_8__(this.currentDate, -1));
@@ -1115,17 +1115,17 @@ var R6Scheduler = /** @class */ (function () {
         var wrapper = document.createElement("div");
         var prev = document.createElement("span");
         var next = document.createElement("span");
-        wrapper.classList.add("r6-month-name");
+        wrapper.classList.add("r6-month-year-title");
         prev.classList.add("r6-prev-month");
         next.classList.add("r6-next-month");
         wrapper.appendChild(prev);
-        wrapper.appendChild(document.createTextNode(this.monthName));
+        wrapper.appendChild(document.createTextNode(this.monthName + " / " + this.yearNumber));
         wrapper.appendChild(next);
         prev.addEventListener("click", this._prevMonth.bind(this));
         next.addEventListener("click", this._nextMonth.bind(this));
         return wrapper;
     };
-    R6Scheduler.prototype._drawHeader = function () {
+    R6Scheduler.prototype._drawWeekDays = function () {
         var headerWrapper = document.createElement("div");
         headerWrapper.classList.add("r6-header");
         var elements = this._getWeekDays();
@@ -1139,6 +1139,7 @@ var R6Scheduler = /** @class */ (function () {
     };
     R6Scheduler.prototype._drawDays = function () {
         var daysWrapper = document.createElement("div");
+        daysWrapper.classList.add("r6-content");
         var beginGap = this._findNumberOfDaysToFillUpGap(1);
         this._drawGap(beginGap, daysWrapper, "begin");
         for (var i = 1; i <= this.numerOfDaysInCurrentMonth; i++) {
@@ -1158,8 +1159,7 @@ var R6Scheduler = /** @class */ (function () {
                 emptyDay.classList.add("r6-day");
                 if (this.fillGaps) {
                     emptyDay.classList.add("r6-different-month-day");
-                    var valueToInsert = this._setCorrectDayValue(gap, i, direction);
-                    console.log(valueToInsert);
+                    var valueToInsert = this._findDayNumberToAddToTheGap(gap, i, direction);
                     emptyDay.appendChild(document.createTextNode(String(valueToInsert)));
                 }
                 else {
@@ -1170,7 +1170,7 @@ var R6Scheduler = /** @class */ (function () {
             }
         }
     };
-    R6Scheduler.prototype._setCorrectDayValue = function (numberOfElementsToGenerate, elementIndex, direction) {
+    R6Scheduler.prototype._findDayNumberToAddToTheGap = function (numberOfElementsToGenerate, elementIndex, direction) {
         var newDateToShareDayNumber;
         if (direction === "begin") {
             newDateToShareDayNumber = date_fns_addDays__WEBPACK_IMPORTED_MODULE_9__(this.currentDate, -numberOfElementsToGenerate + elementIndex - 1);

@@ -28,6 +28,7 @@ module.exports = {
     contentBase: './',
     // hot: true
   },
+  //mode: "production",
   mode: "development",
   plugins: [    
     // new webpack.NamedModulesPlugin(),

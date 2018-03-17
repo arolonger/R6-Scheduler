@@ -16,10 +16,9 @@ import * as lastDayOfMonth from "date-fns/lastDayOfMonth";
 
 export default class R6Scheduler {
     dom: Element;
-    _wholeHtmlContainer: Element;
     currentDate: Date;
     fillGaps: boolean;
-    locale: string;
+    locales: string;
     numerOfDaysInCurrentMonth: number;
     monthName: string;
     dayNumber: number;
@@ -28,14 +27,14 @@ export default class R6Scheduler {
 
     constructor (params: any) {
         this.dom = params.container;
-        this.currentDate = this._setDateWithFirstDay(params.initialDate);
+        this.currentDate = this._overwriteCurrentDate(params.initialDate);
         this.fillGaps = params.fillGaps;
-        this.locale = "pl-PL";
+        this.locales = params.locales || [];
 
         this._generate(this.currentDate)
     }
 
-    _setDateWithFirstDay (date: Date):Date {        
+    _overwriteCurrentDate (date: Date):Date {        
         this.dayNumber = 1;
         this.monthNumber = date.getMonth();
         this.yearNumber = date.getFullYear();
@@ -48,10 +47,10 @@ export default class R6Scheduler {
         this.numerOfDaysInCurrentMonth = getDaysInMonth(date);
         this.monthName = this._getMonthName(date);
 
-        this.currentDate = this._setDateWithFirstDay(date);
+        this.currentDate = this._overwriteCurrentDate(date);
         
         wholeHtmlContainer.appendChild(this._drawTopHeader());
-        wholeHtmlContainer.appendChild(this._drawHeader());
+        wholeHtmlContainer.appendChild(this._drawWeekDays());
         wholeHtmlContainer.appendChild(this._drawDays());
         this._finalDraw(wholeHtmlContainer);
     }
@@ -68,7 +67,7 @@ export default class R6Scheduler {
         var weekDays = [];
 
         for(let i = 0; i < 7; i++)         {       
-            weekDays.push(baseDate.toLocaleDateString(this.locale, { weekday: 'narrow' }));
+            weekDays.push(baseDate.toLocaleDateString(this.locales, { weekday: 'narrow' }));
             baseDate.setDate(baseDate.getDate() + 1);       
         }
         
@@ -76,7 +75,7 @@ export default class R6Scheduler {
     }
 
     _getMonthName(date: Date) {
-        return date.toLocaleString(this.locale, { month: "long"}).toUpperCase();
+        return date.toLocaleString(this.locales, { month: "long"}).toUpperCase();
     }
 
     _prevMonth() {
@@ -92,12 +91,12 @@ export default class R6Scheduler {
         const prev = document.createElement("span");
         const next = document.createElement("span");
 
-        wrapper.classList.add("r6-month-name");
+        wrapper.classList.add("r6-month-year-title");
         prev.classList.add("r6-prev-month");
         next.classList.add("r6-next-month");
 
         wrapper.appendChild(prev);
-        wrapper.appendChild(document.createTextNode(this.monthName));
+        wrapper.appendChild(document.createTextNode(`${this.monthName} / ${this.yearNumber}`));
         wrapper.appendChild(next);
         prev.addEventListener("click", this._prevMonth.bind(this));
         next.addEventListener("click", this._nextMonth.bind(this));
@@ -105,7 +104,7 @@ export default class R6Scheduler {
         return wrapper;
     }
 
-    _drawHeader () {
+    _drawWeekDays () {
         const headerWrapper = document.createElement("div");
         headerWrapper.classList.add("r6-header");
 
@@ -123,6 +122,7 @@ export default class R6Scheduler {
 
     _drawDays () {
         const daysWrapper = document.createElement("div");
+        daysWrapper.classList.add("r6-content");
         
         const beginGap = this._findNumberOfDaysToFillUpGap(1);
         this._drawGap(beginGap, daysWrapper, "begin");
@@ -148,8 +148,7 @@ export default class R6Scheduler {
                 
                 if (this.fillGaps) {
                     emptyDay.classList.add("r6-different-month-day");
-                    let valueToInsert = this._setCorrectDayValue(gap, i, direction);
-                    console.log(valueToInsert);
+                    let valueToInsert = this._findDayNumberToAddToTheGap(gap, i, direction);
                     emptyDay.appendChild(document.createTextNode(String(valueToInsert)));
                 } else {
                     emptyDay.classList.add("r6-empty-day");
@@ -161,7 +160,7 @@ export default class R6Scheduler {
         }
     }
 
-    _setCorrectDayValue (numberOfElementsToGenerate:number, elementIndex: number, direction: string) {
+    _findDayNumberToAddToTheGap (numberOfElementsToGenerate:number, elementIndex: number, direction: string) {
         let newDateToShareDayNumber;
         if (direction === "begin") {
             newDateToShareDayNumber = addDays(this.currentDate, -numberOfElementsToGenerate + elementIndex -1);
