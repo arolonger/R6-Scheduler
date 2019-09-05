@@ -4,8 +4,8 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js",    
+    "test": ".\\node_modules\\.bin\\karma start",
+    "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server --open"
   },
   "repository": {
@@ -19,16 +19,25 @@
   },
   "homepage": "https://github.com/arolonger/R6-Scheduler#readme",
   "dependencies": {
-    "date-fns": "^date-fns@2.0.0-alpha.6"
+    "date-fns": "^2.0.0",
+    "karma-typescript-es6-transform": "^4.1.1",
+    "tslint": "^5.19.0"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.4.0",
     "babel-loader": "^7.1.4",
-    "date-fns": "^date-fns@2.0.0-alpha.6",
-    "ts-loader": "^4.0.1",
-    "typescript": "^2.7.2",
+    "jasmine-core": "^3.4.0",
+    "karma": "^4.2.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^2.0.1",
+    "karma-jasmine-html-reporter": "^1.4.2",
+    "karma-typescript": "^4.1.1",
+    "ts-loader": "^6.0.4",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.5.3",
     "uglifyjs-webpack-plugin": "^1.2.3",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12",
-    "webpack-dev-server": "^3.1.1"
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   }
 }

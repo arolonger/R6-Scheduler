@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/R6Scheduler.ts',
   devtool: 'source-map',
   module: {
     rules: [
@@ -22,7 +22,8 @@ module.exports = {
     filename: 'R6Scheduler.js',
     path: path.resolve(__dirname, 'build'),
     library: "R6Scheduler",
-    libraryTarget: "var"
+    libraryTarget: "var",
+    libraryExport: 'default',
   },
   devServer: {
     contentBase: './',
@@ -34,5 +35,8 @@ module.exports = {
     // new webpack.NamedModulesPlugin(),
     // new webpack.HotModuleReplacementPlugin()
     // new UglifyJSPlugin()
-  ]
+  ],
+  watchOptions: {
+    ignored: ['src/tests/*.ts']
+  }
 };
