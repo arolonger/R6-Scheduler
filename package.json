@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/arolonger/R6-Scheduler#readme",
   "dependencies": {
-    "date-fns": "^2.0.0",
+    "date-fns": "^2.1.0",
     "karma-typescript-es6-transform": "^4.1.1",
     "tslint": "^5.19.0"
   },
