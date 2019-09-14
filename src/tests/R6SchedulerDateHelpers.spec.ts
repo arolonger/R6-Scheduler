@@ -13,7 +13,7 @@ describe('R6Scheduler data logic', () => {
         }).toThrowError('invalid date object');
     });
 
-    it('should has "1" as a day', () => {
+    it('should has "1" as a day in date', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.date.getDate()).toEqual(1);
@@ -25,7 +25,7 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.getDaysInMonths()).toBe(30);
     });
 
-    it('should return full month name', () => {
+    it('should return full month name for default en-US locale', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getMonthName()).toBe('November');
@@ -34,9 +34,15 @@ describe('R6Scheduler data logic', () => {
     it('should return full month name for polish locale', () => {
         const dateHelper = new R6SchedulerDateHelpers(
             new Date('11/13/2011'),
-            'pl-PL',
+            ['pl-PL'],
         );
 
         expect(dateHelper.getMonthName()).toBe('listopad');
     });
+
+    it('should return year', () => {
+        const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
+
+        expect(dateHelper.getYear()).toBe('2011');
+    })
 });

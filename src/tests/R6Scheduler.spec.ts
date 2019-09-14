@@ -1,12 +1,12 @@
 import R6Scheduler from '../R6Scheduler';
-import { Helpers } from './helpers/Helpers';
+import { DomHelpers } from './helpers/DomHelpers';
 
 describe('Check require parameters', () => {
     beforeAll(() => {
         const body = document.getElementsByTagName('body')[0];
-        const div = Helpers.div('', 'js-r6-scheduler');
+        const div = DomHelpers.div('', 'js-r6-scheduler');
         body.appendChild(div);
-        // div.appendChild(Helpers.input('input1', false));
+        // div.appendChild(DomHelpers.input('input1', false));
     });
 
     it('should has defined container for scheduler', () => {

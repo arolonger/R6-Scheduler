@@ -1,17 +1,17 @@
-import {
-    isMonday,
-    isTuesday,
-    isWednesday,
-    isThursday,
-    isFriday,
-    isSaturday,
-    isSunday,
-    addMonths,
-    addDays,
-    lastDayOfMonth,
-    getDaysInMonth,
-} from 'date-fns';
-import R6SchedulerHtml from './R6Scheduler-html';
+// import {
+//     isMonday,
+//     isTuesday,
+//     isWednesday,
+//     isThursday,
+//     isFriday,
+//     isSaturday,
+//     isSunday,
+//     addMonths,
+//     addDays,
+//     lastDayOfMonth,
+//     getDaysInMonth,
+// } from 'date-fns';
+// import R6SchedulerHtml from './R6Scheduler-html';
 
 interface IR6Scheduler {
     container: HTMLElement;
@@ -35,17 +35,9 @@ export default class R6Scheduler {
         // this.locales = params.locales || []; 
 
         // this._generate(this.currentDate)
-        const html = new R6SchedulerHtml(new Date());
-        this.container.appendChild(html.generate(new Date()));
+        // const html = new R6SchedulerHtml(new Date());
+        // this.container.appendChild(html.generate(new Date()));
     }
-
-    // _overwriteCurrentDate(date: Date): Date {
-    //     this.dayNumber = 1;
-    //     this.monthNumber = date.getMonth();
-    //     this.yearNumber = date.getFullYear();
-
-    //     return new Date(this.yearNumber, this.monthNumber, this.dayNumber);
-    // }
 
     // _generate(date: Date): void {
     //     let wholeHtmlContainer = document.createElement("div");
@@ -89,24 +81,6 @@ export default class R6Scheduler {
 
     // _nextMonth() {
     //     this._generate(addMonths(this.currentDate, 1));
-    // }
-
-    // _drawTopHeader() {
-    //     const wrapper = document.createElement("div");
-    //     const prev = document.createElement("span");
-    //     const next = document.createElement("span");
-
-    //     wrapper.classList.add("r6-month-year-title");
-    //     prev.classList.add("r6-prev-month");
-    //     next.classList.add("r6-next-month");
-
-    //     wrapper.appendChild(prev);
-    //     wrapper.appendChild(document.createTextNode(`${this.monthName} / ${this.yearNumber}`));
-    //     wrapper.appendChild(next);
-    //     prev.addEventListener("click", this._prevMonth.bind(this));
-    //     next.addEventListener("click", this._nextMonth.bind(this));
-
-    //     return wrapper;
     // }
 
     // _drawWeekDays() {
