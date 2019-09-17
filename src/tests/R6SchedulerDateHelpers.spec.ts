@@ -44,5 +44,5 @@ describe('R6Scheduler data logic', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getYear()).toBe('2011');
-    })
+    });
 });

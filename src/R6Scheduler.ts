@@ -1,3 +1,5 @@
+import R6SchedulerDrawHeader from "./R6SchedulerDrawHeader";
+
 // import {
 //     isMonday,
 //     isTuesday,
@@ -15,11 +17,12 @@
 
 interface IR6Scheduler {
     container: HTMLElement;
+    initialDate?: Date;
 }
 
 export default class R6Scheduler {
     container: HTMLElement;
-    // currentDate: Date;
+    initialDate: Date = new Date();
     // fillGaps: boolean; 
     // locales: string;
     // numerOfDaysInCurrentMonth: number;
@@ -30,6 +33,7 @@ export default class R6Scheduler {
 
     constructor(params: IR6Scheduler) {
         this.container = params.container;
+        this.validateParameters();
         // this.currentDate = this._overwriteCurrentDate(params.initialDate);
         // this.fillGaps = params.fillGaps;
         // this.locales = params.locales || []; 
@@ -37,6 +41,20 @@ export default class R6Scheduler {
         // this._generate(this.currentDate)
         // const html = new R6SchedulerHtml(new Date());
         // this.container.appendChild(html.generate(new Date()));
+        this.draw();
+    }
+
+    private validateParameters() {
+        if (this.container === null) {
+            throw new Error('defined container is null');
+        }
+    }
+
+    public draw() {
+        const header = new R6SchedulerDrawHeader();
+        const headerHtml = header.getHeaderHtml(this.initialDate);
+
+        this.container.appendChild(headerHtml);
     }
 
     // _generate(date: Date): void {

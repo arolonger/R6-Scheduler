@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="R6Scheduler.css" />
 </head>
+
 <body>
 
     <div class="callout large primary">
@@ -15,22 +17,23 @@
             <h4>R6Scheduler example</h4>
         </div>
 
-        <div class="grid-x"> 
-            <div class="cell small-12 large-4 large-offset-4">                 
+        <div class="grid-x">
+            <div class="cell small-12 large-4 large-offset-4">
                 <div class="js-r6-scheduler"></div>
             </div>
         </div>
     </div>
 
     <script src="http://localhost:8080/R6Scheduler.js"></script>
-    
+
     <script>
-    new R6Scheduler({
-        container: document.querySelector(".js-r6-scheduler"),
-        initialDate: new Date,
-        fillGaps: true
-    });
+        new R6Scheduler({
+            container: document.querySelector(".js-r6-scheduler"),
+            initialDate: new Date(),
+            fillGaps: true
+        });
     </script>
-    
+
 </body>
+
 </html>

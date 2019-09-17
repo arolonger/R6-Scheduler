@@ -9,11 +9,11 @@ describe('Check require parameters', () => {
         // div.appendChild(DomHelpers.input('input1', false));
     });
 
-    it('should has defined container for scheduler', () => {
-        const scheduler = new R6Scheduler({
-            container: document.querySelector('.js-r6-scheduler'),
-        });
-
-        expect(scheduler.container.classList.contains('js-r6-scheduler')).toBeTruthy();
+    it('should throw an error when defined container doesn\'t exists', () => {
+        expect(() => {
+            new R6Scheduler({
+                container: document.querySelector('.js-r6-scheduler-that-doesnt-exists'),
+            });
+        }).toThrowError('defined container is null');
     });
 });
