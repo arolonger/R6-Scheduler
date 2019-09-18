@@ -54,7 +54,7 @@ export default class R6SchedulerDrawHeader {
 
     public updateHeaderText(date: Date) {
         const headerText = this.getHeaderText(date);
-        this.textWrapper.appendChild(document.createTextNode(headerText));
+        this.textWrapper.innerHTML = headerText;
     }
 
     private getHeaderText(date: Date) {

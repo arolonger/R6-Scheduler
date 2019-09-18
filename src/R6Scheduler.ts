@@ -1,18 +1,18 @@
 import R6SchedulerDrawHeader from "./R6SchedulerDrawHeader";
 
-// import {
-//     isMonday,
-//     isTuesday,
-//     isWednesday,
-//     isThursday,
-//     isFriday,
-//     isSaturday,
-//     isSunday,
-//     addMonths,
-//     addDays,
-//     lastDayOfMonth,
-//     getDaysInMonth,
-// } from 'date-fns';
+import {
+    // isMonday,
+    // isTuesday,
+    // isWednesday,
+    // isThursday,
+    // isFriday,
+    // isSaturday,
+    // isSunday,
+    addMonths,
+    // addDays,
+    // lastDayOfMonth,
+    // getDaysInMonth,
+} from 'date-fns';
 // import R6SchedulerHtml from './R6Scheduler-html';
 
 interface IR6Scheduler {
@@ -22,7 +22,8 @@ interface IR6Scheduler {
 
 export default class R6Scheduler {
     container: HTMLElement;
-    initialDate: Date = new Date();
+    date: Date;
+    header: R6SchedulerDrawHeader;
     // fillGaps: boolean; 
     // locales: string;
     // numerOfDaysInCurrentMonth: number;
@@ -33,15 +34,15 @@ export default class R6Scheduler {
 
     constructor(params: IR6Scheduler) {
         this.container = params.container;
+        this.date = params.initialDate || new Date();
+
         this.validateParameters();
         // this.currentDate = this._overwriteCurrentDate(params.initialDate);
         // this.fillGaps = params.fillGaps;
         // this.locales = params.locales || []; 
 
         // this._generate(this.currentDate)
-        // const html = new R6SchedulerHtml(new Date());
-        // this.container.appendChild(html.generate(new Date()));
-        this.draw();
+        this.initialDraw(this.date);
     }
 
     private validateParameters() {
@@ -50,13 +51,29 @@ export default class R6Scheduler {
         }
     }
 
-    public draw() {
-        const header = new R6SchedulerDrawHeader();
-        const headerHtml = header.getHeaderHtml(this.initialDate);
+    public initialDraw(date: Date) {
+        this.header = new R6SchedulerDrawHeader({
+            onPrevCallback: this.prevDate.bind(this),
+            onNextCallback: this.nextDate.bind(this),
+        });
+        const headerHtml = this.header.getInitialHtml(date);
 
         this.container.appendChild(headerHtml);
     }
 
+    public prevDate() {
+        const prevDate = addMonths(this.date, -1);
+
+        this.header.updateHeaderText(prevDate);
+        this.date = prevDate;
+    }
+
+    public nextDate() {
+        const nextDate = addMonths(this.date, 1);
+
+        this.header.updateHeaderText(nextDate);
+        this.date = nextDate;
+    }
     // _generate(date: Date): void {
     //     let wholeHtmlContainer = document.createElement("div");
     //     this.numerOfDaysInCurrentMonth = getDaysInMonth(date);
