@@ -1,28 +1,60 @@
 import R6SchedulerDateHelpers from './R6SchedulerDateHelpers';
 
+interface IR6SchedulerDrawHeader {
+    onNextCallback?: () => void;
+    onPrevCallback?: () => void;
+}
+
 export default class R6SchedulerDrawHeader {
-    constructor() {
-        // TODO: assign click handlers for next/prev
+    onPrevCallback: () => void;
+    onNextCallback: () => void;
+    textWrapper: HTMLDivElement;
+    constructor(
+        {
+            onPrevCallback = () => { },
+            onNextCallback = () => { },
+        }: IR6SchedulerDrawHeader = {},
+    ) {
+        this.onPrevCallback = onPrevCallback;
+        this.onNextCallback = onNextCallback;
+
+        this.onPrevClicked = this.onPrevClicked.bind(this);
+        this.onNextClicked = this.onNextClicked.bind(this);
     }
 
-    public getHeaderHtml(date: Date) {
+    public getInitialHtml(date: Date) {
         const wrapper = document.createElement('div');
-        const prev = document.createElement('span');
-        const next = document.createElement('span');
-        const headerText = this.getHeaderText(date);
-        const text = document.createTextNode(headerText);
+        const prev = document.createElement('button');
+        const next = document.createElement('button');
+        this.textWrapper = document.createElement('div');
+
+        this.updateHeaderText(date);
 
         wrapper.classList.add('r6-month-year-title');
         prev.classList.add('r6-prev-month');
         next.classList.add('r6-next-month');
 
         wrapper.appendChild(prev);
-        wrapper.appendChild(text);
+        wrapper.appendChild(this.textWrapper);
         wrapper.appendChild(next);
-        //     prev.addEventListener("click", this._prevMonth.bind(this));
-        //     next.addEventListener("click", this._nextMonth.bind(this));
+
+        prev.addEventListener('click', this.onPrevClicked);
+        next.addEventListener('click', this.onNextClicked);
 
         return wrapper;
+    }
+
+    public onPrevClicked() {
+        this.onPrevCallback();
+    }
+
+    public onNextClicked() {
+        this.onNextCallback();
+    }
+
+    public updateHeaderText(date: Date) {
+        const headerText = this.getHeaderText(date);
+        this.textWrapper.appendChild(document.createTextNode(headerText));
     }
 
     private getHeaderText(date: Date) {

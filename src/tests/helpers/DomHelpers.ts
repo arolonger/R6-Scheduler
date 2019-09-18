@@ -13,8 +13,8 @@ export class DomHelpers {
         return element;
     }
 
-    static span(id: string, cssClass: string) {
-        const element = document.createElement('span');
+    static button(id: string, cssClass: string) {
+        const element = document.createElement('button');
         element.id = id;
         element.classList.add(cssClass);
         return element;
