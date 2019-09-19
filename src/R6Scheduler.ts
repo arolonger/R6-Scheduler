@@ -11,8 +11,8 @@ import {
     addMonths,
     // addDays,
     // lastDayOfMonth,
-    // getDaysInMonth,
 } from 'date-fns';
+import R6SchedulerDrawContent from "./R6SchedulerDrawContent";
 // import R6SchedulerHtml from './R6Scheduler-html';
 
 interface IR6Scheduler {
@@ -24,6 +24,7 @@ export default class R6Scheduler {
     container: HTMLElement;
     date: Date;
     header: R6SchedulerDrawHeader;
+    content: R6SchedulerDrawContent;
     // fillGaps: boolean; 
     // locales: string;
     // numerOfDaysInCurrentMonth: number;
@@ -56,9 +57,13 @@ export default class R6Scheduler {
             onPrevCallback: this.prevDate.bind(this),
             onNextCallback: this.nextDate.bind(this),
         });
+        this.content = new R6SchedulerDrawContent();
+
         const headerHtml = this.header.getInitialHtml(date);
+        const contentHtml = this.content.getInitialHtml(date);
 
         this.container.appendChild(headerHtml);
+        this.container.appendChild(contentHtml);
     }
 
     public prevDate() {
@@ -74,36 +79,12 @@ export default class R6Scheduler {
         this.header.updateHeaderText(nextDate);
         this.date = nextDate;
     }
-    // _generate(date: Date): void {
-    //     let wholeHtmlContainer = document.createElement("div");
-    //     this.numerOfDaysInCurrentMonth = getDaysInMonth(date);
-    //     this.monthName = this._getMonthName(date);
-
-    //     this.currentDate = this._overwriteCurrentDate(date);
-
-    //     wholeHtmlContainer.appendChild(this._drawTopHeader());
-    //     wholeHtmlContainer.appendChild(this._drawWeekDays());
-    //     wholeHtmlContainer.appendChild(this._drawDays());
-    //     this._finalDraw(wholeHtmlContainer);
-    // }
 
     // _finalDraw(wholeHtmlToRender: Element) {
     //     if (this.dom.firstChild) {
     //         this.dom.removeChild(this.dom.firstChild);
     //     }
     //     this.dom.appendChild(wholeHtmlToRender);
-    // }
-
-    // _getWeekDays() {
-    //     var baseDate = new Date(Date.UTC(2017, 0, 2)); // Monday
-    //     var weekDays = [];
-
-    //     for (let i = 0; i < 7; i++) {
-    //         weekDays.push(baseDate.toLocaleDateString(this.locales, { weekday: 'narrow' }));
-    //         baseDate.setDate(baseDate.getDate() + 1);
-    //     }
-
-    //     return weekDays;
     // }
 
     // _getMonthName(date: Date) {
@@ -116,22 +97,6 @@ export default class R6Scheduler {
 
     // _nextMonth() {
     //     this._generate(addMonths(this.currentDate, 1));
-    // }
-
-    // _drawWeekDays() {
-    //     const headerWrapper = document.createElement("div");
-    //     headerWrapper.classList.add("r6-header");
-
-    //     const elements = this._getWeekDays();
-
-    //     elements.forEach((el) => {
-    //         var dayName = document.createElement("div");
-    //         dayName.classList.add("r6-cell");
-    //         dayName.appendChild(document.createTextNode(el));
-    //         headerWrapper.appendChild(dayName);
-    //     });
-
-    //     return headerWrapper;
     // }
 
     // _drawDays() {

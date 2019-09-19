@@ -1,4 +1,3 @@
-import { DomHelpers } from './helpers/DomHelpers';
 import R6SchedulerDrawHeader from '../R6SchedulerDrawHeader';
 
 describe('Check require parameters', () => {

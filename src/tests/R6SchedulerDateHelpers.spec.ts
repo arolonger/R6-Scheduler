@@ -45,4 +45,11 @@ describe('R6Scheduler data logic', () => {
 
         expect(dateHelper.getYear()).toBe('2011');
     });
+
+    it('should return short english week days', () => {
+        const dateHelper = new R6SchedulerDateHelpers();
+        const weekDays = dateHelper.getShortWeekDays();
+
+        expect(weekDays).toEqual(['M', 'T', 'W', 'T', 'F', 'S', 'S']);
+    });
 });

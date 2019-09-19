@@ -3,7 +3,7 @@ export default class R6SchedulerDateHelpers {
     date: Date;
     locales: string[];
 
-    constructor(date: Date, locales: string[] = ['en-US']) {
+    constructor(date: Date = new Date(), locales: string[] = ['en-US']) {
         this.date = new Date(date.getFullYear(), date.getMonth(), 1);
         this.locales = locales;
 
@@ -28,5 +28,17 @@ export default class R6SchedulerDateHelpers {
 
     getYear() {
         return String(this.date.getFullYear());
+    }
+
+    getShortWeekDays() {
+        const baseDate = new Date(Date.UTC(2017, 0, 2)); // Monday
+        const weekDays = [];
+
+        for (let i = 0; i < 7; i += 1) {
+            weekDays.push(baseDate.toLocaleDateString(this.locales, { weekday: 'narrow' }));
+            baseDate.setDate(baseDate.getDate() + 1);
+        }
+
+        return weekDays;
     }
 }

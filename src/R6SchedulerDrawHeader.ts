@@ -6,9 +6,10 @@ interface IR6SchedulerDrawHeader {
 }
 
 export default class R6SchedulerDrawHeader {
-    onPrevCallback: () => void;
-    onNextCallback: () => void;
+    private onPrevCallback: () => void;
+    private onNextCallback: () => void;
     textWrapper: HTMLDivElement;
+
     constructor(
         {
             onPrevCallback = () => { },
@@ -17,6 +18,7 @@ export default class R6SchedulerDrawHeader {
     ) {
         this.onPrevCallback = onPrevCallback;
         this.onNextCallback = onNextCallback;
+        this.textWrapper = null;
 
         this.onPrevClicked = this.onPrevClicked.bind(this);
         this.onNextClicked = this.onNextClicked.bind(this);
@@ -26,8 +28,8 @@ export default class R6SchedulerDrawHeader {
         const wrapper = document.createElement('div');
         const prev = document.createElement('button');
         const next = document.createElement('button');
-        this.textWrapper = document.createElement('div');
 
+        this.textWrapper = document.createElement('div');
         this.updateHeaderText(date);
 
         wrapper.classList.add('r6-month-year-title');
