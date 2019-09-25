@@ -8,13 +8,6 @@ describe('Check require parameters', () => {
         expect(content).toBeTruthy();
     });
 
-    it('should return 30 as number of days in month', () => {
-        const content = new R6SchedulerDrawContent();
-        const daysCounter = content.getDaysInMonth(new Date('9/13/2019'));
-
-        expect(daysCounter).toBe(30);
-    });
-
     it('should return 0 as gap before when first day is Monday', () => {
         const content = new R6SchedulerDrawContent();
         const gaps = content.findGap(new Date('7/13/2019'));
@@ -35,5 +28,11 @@ describe('Check require parameters', () => {
 
         expect(gaps.before).toBe(4);
         expect(gaps.after).toBe(1);
+    });
+
+    it('should render days in place of "-" character before and after current date', () => {
+        const content = new R6SchedulerDrawContent({
+            fillGaps: true,
+        });
     });
 });

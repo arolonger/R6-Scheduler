@@ -1,4 +1,5 @@
 import { getDaysInMonth, isValid } from 'date-fns';
+
 export default class R6SchedulerDateHelpers {
     date: Date;
     locales: string[];
@@ -30,15 +31,23 @@ export default class R6SchedulerDateHelpers {
         return String(this.date.getFullYear());
     }
 
-    getShortWeekDays() {
+    private getWeekDays(options: Intl.DateTimeFormatOptions) {
         const baseDate = new Date(Date.UTC(2017, 0, 2)); // Monday
         const weekDays = [];
 
         for (let i = 0; i < 7; i += 1) {
-            weekDays.push(baseDate.toLocaleDateString(this.locales, { weekday: 'narrow' }));
+            weekDays.push(baseDate.toLocaleDateString(this.locales, options));
             baseDate.setDate(baseDate.getDate() + 1);
         }
 
         return weekDays;
+    }
+
+    getShortWeekDays() {
+        return this.getWeekDays({ weekday: 'narrow' });
+    }
+
+    getLongWeekDays() {
+        return this.getWeekDays({ weekday: 'long' });
     }
 }

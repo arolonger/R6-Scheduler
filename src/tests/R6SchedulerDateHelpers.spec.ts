@@ -50,6 +50,15 @@ describe('R6Scheduler data logic', () => {
         const dateHelper = new R6SchedulerDateHelpers();
         const weekDays = dateHelper.getShortWeekDays();
 
+        expect(weekDays.length).toBe(7);
         expect(weekDays).toEqual(['M', 'T', 'W', 'T', 'F', 'S', 'S']);
+    });
+
+    it('should return long english week days', () => {
+        const dateHelper = new R6SchedulerDateHelpers();
+        const weekDays = dateHelper.getLongWeekDays();
+
+        expect(weekDays.length).toBe(7);
+        expect(weekDays).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
     });
 });

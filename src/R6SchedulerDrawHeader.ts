@@ -30,9 +30,11 @@ export default class R6SchedulerDrawHeader {
         const next = document.createElement('button');
 
         this.textWrapper = document.createElement('div');
+        this.textWrapper.classList.add('r6-month-year-title');
+
         this.updateHeaderText(date);
 
-        wrapper.classList.add('r6-month-year-title');
+        wrapper.classList.add('r6-month-year-title-wrapper');
         prev.classList.add('r6-prev-month');
         next.classList.add('r6-next-month');
 
