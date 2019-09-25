@@ -8,17 +8,32 @@ describe('Check require parameters', () => {
         expect(content).toBeTruthy();
     });
 
-    it('should return number of days in month', () => {
+    it('should return 30 as number of days in month', () => {
         const content = new R6SchedulerDrawContent();
-        const daysCounter = content.getDaysInMonth(new Date('11/13/2011'));
+        const daysCounter = content.getDaysInMonth(new Date('9/13/2019'));
 
         expect(daysCounter).toBe(30);
     });
 
-    it('should return 0 as gap before', () => {
+    it('should return 0 as gap before when first day is Monday', () => {
         const content = new R6SchedulerDrawContent();
         const gaps = content.findGap(new Date('7/13/2019'));
 
         expect(gaps.before).toBe(0);
+    });
+
+    it('should return 6 as gap before when first day is Sunday', () => {
+        const content = new R6SchedulerDrawContent();
+        const gaps = content.findGap(new Date('9/13/2019'));
+
+        expect(gaps.before).toBe(6);
+    });
+
+    it('should return 4 as gap before and 1 as gap after', () => {
+        const content = new R6SchedulerDrawContent();
+        const gaps = content.findGap(new Date('11/13/2019'));
+
+        expect(gaps.before).toBe(4);
+        expect(gaps.after).toBe(1);
     });
 });

@@ -31,7 +31,6 @@
     width: calc(100%/7);
     text-align: center;
 }
-.r6-day.r6-empty-day,
-.r6-day.r6-different-month-day {
+.r6-day.r6-empty-day {
     color: gray;
 }

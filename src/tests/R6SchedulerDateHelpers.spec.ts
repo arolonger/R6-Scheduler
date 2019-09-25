@@ -7,7 +7,7 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.isValid()).toBeTruthy();
     });
 
-    it('should throw an exception if date is not valid date object', () => {
+    it('should throw an exception if defined date is not valid date object', () => {
         expect(() => {
             new R6SchedulerDateHelpers(new Date('1x1/13/2011'));
         }).toThrowError('invalid date object');
@@ -19,7 +19,7 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.date.getDate()).toEqual(1);
     });
 
-    it('should return number of days in month', () => {
+    it('should return number of days in defined month', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getDaysInMonths()).toBe(30);
@@ -40,7 +40,7 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.getMonthName()).toBe('listopad');
     });
 
-    it('should return year', () => {
+    it('should return year from defined date', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getYear()).toBe('2011');

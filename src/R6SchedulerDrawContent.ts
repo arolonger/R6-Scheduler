@@ -1,9 +1,15 @@
 import R6SchedulerDateHelpers from './R6SchedulerDateHelpers';
-import { getDaysInMonth, isMonday, isTuesday, isWednesday, isThursday, isFriday, isSaturday, isSunday } from 'date-fns/esm';
+import { getDaysInMonth, getDay } from 'date-fns/esm';
 
-interface IR6SchedulerDrawContentGaps {
+interface IR6SchedulerDrawContentCells {
+    numberOfDays: number;
     before: number;
     after: number;
+}
+
+enum R6SchedulerDrawContentCellType {
+    Empty,
+    Day,
 }
 
 export default class R6SchedulerDrawContent {
@@ -42,62 +48,24 @@ export default class R6SchedulerDrawContent {
         const daysContainer = document.createElement('div');
         daysContainer.classList.add('r6-content');
 
-        const daysInMonth = String(this.getDaysInMonth(date));
-
-        daysContainer.append(daysInMonth);
+        const cellsManager = this.findGap(date);
+        this.drawCell(cellsManager.before, daysContainer, R6SchedulerDrawContentCellType.Empty);
+        this.drawCell(cellsManager.numberOfDays, daysContainer, R6SchedulerDrawContentCellType.Day);
+        this.drawCell(cellsManager.after, daysContainer, R6SchedulerDrawContentCellType.Empty);
 
         return daysContainer;
-
-        //     const beginGap = this._findNumberOfDaysToFillUpGap(1);
-        //     this._drawGap(beginGap, daysWrapper, "begin");
-
-        //     for (var i: number = 1; i <= this.numerOfDaysInCurrentMonth; i++) {
-        //         var day = document.createElement("div");
-        //         day.classList.add("r6-day");
-        //         day.appendChild(document.createTextNode(String(i)));
-        //         daysWrapper.appendChild(day);
-        //     }
-
-        //     const endGap = this._findNumberOfDaysToFillUpGap(this.numerOfDaysInCurrentMonth);
-        //     this._drawGap(endGap, daysWrapper, "end");
-
-        //     return daysWrapper;
     }
 
     public getDaysInMonth(date: Date) {
         return getDaysInMonth(date);
     }
 
-    public findGap(date: Date): IR6SchedulerDrawContentGaps {
+    public findGap(date: Date): IR6SchedulerDrawContentCells {
         const numberOfDays = this.getDaysInMonth(date);
-        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        let gapBefore = 0;
-
-        if (isTuesday(firstDayOfMonth)) {
-            gapBefore = 1;
-        }
-
-        if (isWednesday(firstDayOfMonth)) {
-            gapBefore = 2;
-        }
-
-        if (isThursday(firstDayOfMonth)) {
-            gapBefore = 3;
-        }
-
-        if (isFriday(firstDayOfMonth)) {
-            gapBefore = 4;
-        }
-
-        if (isSaturday(firstDayOfMonth)) {
-            gapBefore = 5;
-        }
-
-        if (isSunday(firstDayOfMonth)) {
-            gapBefore = 6;
-        }
+        const gapBefore = this.findFirstDayOfTheMonthNumber(date) - 1;
 
         return {
+            numberOfDays,
             before: gapBefore,
             after: this.findGapAfter(numberOfDays + gapBefore),
         };
@@ -105,5 +73,35 @@ export default class R6SchedulerDrawContent {
 
     private findGapAfter(daysBefore: number): number {
         return 7 - (daysBefore % 7);
+    }
+
+    private findFirstDayOfTheMonthNumber(date: Date) {
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        let dayNumber = getDay(firstDayOfMonth);
+
+        // sunday
+        if (dayNumber === 0) {
+            dayNumber = 7;
+        }
+
+        return dayNumber;
+    }
+
+    private drawCell(cellCounter: number, daysWrapper: HTMLDivElement, type: R6SchedulerDrawContentCellType) {
+        if (cellCounter !== 0) {
+            for (let i = 1; i <= cellCounter; i += 1) {
+                const cell = document.createElement('div');
+                cell.classList.add('r6-day');
+
+                if (type === R6SchedulerDrawContentCellType.Empty) {
+                    cell.classList.add('r6-empty-day');
+                    cell.appendChild(document.createTextNode('-'));
+                } else {
+                    cell.appendChild(document.createTextNode(String(i)));
+                }
+
+                daysWrapper.appendChild(cell);
+            }
+        }
     }
 }
