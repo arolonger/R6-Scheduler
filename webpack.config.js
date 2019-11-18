@@ -37,6 +37,6 @@ module.exports = {
     // new UglifyJSPlugin()
   ],
   watchOptions: {
-    ignored: ['src/tests/*.ts']
+    ignored: ['src/tests/**/*.ts']
   }
 };
