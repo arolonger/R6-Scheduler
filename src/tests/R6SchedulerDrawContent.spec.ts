@@ -8,31 +8,33 @@ describe('Check require parameters', () => {
         expect(content).toBeTruthy();
     });
 
-    it('should return 0 as gap before when first day is Monday', () => {
+    // it('should return 0 as gap before when first day is Monday', () => {
+    //     const content = new R6SchedulerDrawContent();
+    //     const gaps = content.findGap(new Date('7/13/2019'));
+
+    //     expect(gaps.before).toBe(0);
+    // });
+
+    // it('should return 6 as gap before when first day is Sunday', () => {
+    //     const content = new R6SchedulerDrawContent();
+    //     const gaps = content.findGap(new Date('9/13/2019'));
+
+    //     expect(gaps.before).toBe(6);
+    // });
+
+    // it('should return 4 as gap before and 1 as gap after', () => {
+    //     const content = new R6SchedulerDrawContent();
+    //     const gaps = content.findGap(new Date('11/13/2019'));
+
+    //     expect(gaps.before).toBe(4);
+    //     expect(gaps.after).toBe(1);
+    // });
+
+    it('should return [28, 29, 30, 31] as days to render before November 2019', () => {
+        const expectedValue = [28, 29, 30, 31];
         const content = new R6SchedulerDrawContent();
-        const gaps = content.findGap(new Date('7/13/2019'));
+        const dateManager = content.prepareDataToDrawContent(new Date('11/13/2019'));
 
-        expect(gaps.before).toBe(0);
-    });
-
-    it('should return 6 as gap before when first day is Sunday', () => {
-        const content = new R6SchedulerDrawContent();
-        const gaps = content.findGap(new Date('9/13/2019'));
-
-        expect(gaps.before).toBe(6);
-    });
-
-    it('should return 4 as gap before and 1 as gap after', () => {
-        const content = new R6SchedulerDrawContent();
-        const gaps = content.findGap(new Date('11/13/2019'));
-
-        expect(gaps.before).toBe(4);
-        expect(gaps.after).toBe(1);
-    });
-
-    it('should render days in place of "-" character before and after current date', () => {
-        const content = new R6SchedulerDrawContent({
-            fillGaps: true,
-        });
+        expect(dateManager.daysBefore).toEqual(expectedValue);
     });
 });

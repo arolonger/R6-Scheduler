@@ -1,19 +1,24 @@
 import R6SchedulerDateHelpers from './R6SchedulerDateHelpers';
-import { getDaysInMonth, getDay } from 'date-fns/esm';
+import { getDaysInMonth, getDay, addMonths } from 'date-fns/esm';
 
 interface IR6SchedulerDrawContentCells {
     numberOfDays: number;
-    before: number;
-    after: number;
+    daysBefore: number[];
+    daysAfter: number[];
 }
 
 enum R6SchedulerDrawContentCellType {
-    BeforeAfterMonthDay,
-    CurrentMonthDay,
+    OutsideCurrentMonth,
+    CurrentMonthDays,
 }
 
 interface IR6SchedulerDrawContent {
     fillGaps?: boolean;
+}
+
+enum GapsDirection {
+    Before = -1,
+    After = 1,
 }
 
 export default class R6SchedulerDrawContent {
@@ -40,13 +45,13 @@ export default class R6SchedulerDrawContent {
     }
 
     public updateContentHtml(date: Date) {
-        const cellsManager = this.findGap(date);
+        const cellsManager = this.prepareDataToDrawContent(date);
 
         this.daysContainer.innerHTML = null;
 
-        this.drawCell(cellsManager.before, this.daysContainer, R6SchedulerDrawContentCellType.BeforeAfterMonthDay);
-        this.drawCell(cellsManager.numberOfDays, this.daysContainer, R6SchedulerDrawContentCellType.CurrentMonthDay);
-        this.drawCell(cellsManager.after, this.daysContainer, R6SchedulerDrawContentCellType.BeforeAfterMonthDay);
+        this.drawOutsideCurrentDateCell(cellsManager.daysBefore, this.daysContainer);
+        this.drawCurrentDateCell(cellsManager.numberOfDays, this.daysContainer);
+        this.drawOutsideCurrentDateCell(cellsManager.daysAfter, this.daysContainer);
     }
 
     private getWeekDaysHtml() {
@@ -77,14 +82,17 @@ export default class R6SchedulerDrawContent {
         return this.daysContainer;
     }
 
-    public findGap(date: Date): IR6SchedulerDrawContentCells {
+    public prepareDataToDrawContent(date: Date): IR6SchedulerDrawContentCells {
         const numberOfDays = getDaysInMonth(date);
         const gapBefore = this.findFirstDayOfTheMonthNumber(date) - 1;
+        const daysBefore = this.findValuesForGaps(date, gapBefore, GapsDirection.Before);
+        const gapAfter = this.findGapAfter(numberOfDays + gapBefore);
+        const daysAfter = [1];
 
         return {
             numberOfDays,
-            before: gapBefore,
-            after: this.findGapAfter(numberOfDays + gapBefore),
+            daysBefore,
+            daysAfter,
         };
     }
 
@@ -104,18 +112,38 @@ export default class R6SchedulerDrawContent {
         return dayNumber;
     }
 
-    private drawCell(cellCounter: number, daysWrapper: HTMLDivElement, type: R6SchedulerDrawContentCellType) {
+    private findValuesForGaps(date: Date, gapCounter: number, direction: GapsDirection) {
+        const dateFollowingDirection = addMonths(date, direction);
+        const daysInNewMonth = getDaysInMonth(dateFollowingDirection);
+        const firstDayNumber = daysInNewMonth - gapCounter + 1;
+        const result = [firstDayNumber];
+
+        for ()
+    }
+
+    private drawCurrentDateCell(cellCounter: number, daysWrapper: HTMLDivElement) {
         if (cellCounter !== 0) {
             for (let i = 1; i <= cellCounter; i += 1) {
                 const cell = document.createElement('div');
                 cell.classList.add('r6-day');
 
-                if (type === R6SchedulerDrawContentCellType.BeforeAfterMonthDay) {
-                    cell.classList.add('r6-empty-day');
-                    cell.appendChild(document.createTextNode('-'));
-                } else {
-                    cell.appendChild(document.createTextNode(String(i)));
-                }
+                cell.appendChild(document.createTextNode(String(i)));
+
+                daysWrapper.appendChild(cell);
+            }
+        }
+    }
+
+    private drawOutsideCurrentDateCell(daysToRender: number[], daysWrapper: HTMLDivElement) {
+        const cellCounter = daysToRender.length;
+
+        if (cellCounter !== 0) {
+            for (let i = 1; i <= cellCounter; i += 1) {
+                const cell = document.createElement('div');
+                cell.classList.add('r6-day');
+                cell.classList.add('r6-empty-day');
+
+                cell.appendChild(document.createTextNode('-'));
 
                 daysWrapper.appendChild(cell);
             }
