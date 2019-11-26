@@ -16,11 +16,6 @@ interface IR6SchedulerDrawContent {
     fillGaps?: boolean;
 }
 
-enum GapsDirection {
-    Before = -1,
-    After = 1,
-}
-
 export default class R6SchedulerDrawContent {
     private daysContainer: HTMLDivElement;
     private fillGaps: boolean;
@@ -84,10 +79,10 @@ export default class R6SchedulerDrawContent {
 
     public prepareDataToDrawContent(date: Date): IR6SchedulerDrawContentCells {
         const numberOfDays = getDaysInMonth(date);
-        const gapBefore = this.findFirstDayOfTheMonthNumber(date) - 1;
-        const daysBefore = this.findValuesForGaps(date, gapBefore, GapsDirection.Before);
-        const gapAfter = this.findGapAfter(numberOfDays + gapBefore);
-        const daysAfter = [1];
+        const cellsNumberBefore = this.getFirstDayOfMonthIndex(date) - 1;
+        const daysBefore = this.findValuesForCellsBeforeCurrentMonth(date, cellsNumberBefore);
+        const cellsNumberAfter = this.getCellsNumberAfter(numberOfDays + cellsNumberBefore);
+        const daysAfter = this.findValuesForCellsAfterCurrentMonth(cellsNumberAfter);
 
         return {
             numberOfDays,
@@ -96,11 +91,11 @@ export default class R6SchedulerDrawContent {
         };
     }
 
-    private findGapAfter(daysBefore: number): number {
+    getCellsNumberAfter(daysBefore: number): number {
         return 7 - (daysBefore % 7);
     }
 
-    private findFirstDayOfTheMonthNumber(date: Date) {
+    private getFirstDayOfMonthIndex(date: Date) {
         const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
         let dayNumber = getDay(firstDayOfMonth);
 
@@ -112,13 +107,27 @@ export default class R6SchedulerDrawContent {
         return dayNumber;
     }
 
-    private findValuesForGaps(date: Date, gapCounter: number, direction: GapsDirection) {
-        const dateFollowingDirection = addMonths(date, direction);
-        const daysInNewMonth = getDaysInMonth(dateFollowingDirection);
-        const firstDayNumber = daysInNewMonth - gapCounter + 1;
-        const result = [firstDayNumber];
+    findValuesForCellsBeforeCurrentMonth(date: Date, cellsCounter: number) {
+        const dateAfterDirection = addMonths(date, -1);
+        const daysInNewMonth = getDaysInMonth(dateAfterDirection);
+        const firstDayNumber = daysInNewMonth - cellsCounter + 1;
+        const result = [];
 
-        for ()
+        for (let dayNumber = firstDayNumber; dayNumber <= daysInNewMonth; dayNumber += 1) {
+            result.push(dayNumber);
+        }
+
+        return result;
+    }
+
+    findValuesForCellsAfterCurrentMonth(cellsCounter: number) {
+        const result = [];
+
+        for (let dayNumber = 1; dayNumber <= cellsCounter; dayNumber += 1) {
+            result.push(dayNumber);
+        }
+
+        return result;
     }
 
     private drawCurrentDateCell(cellCounter: number, daysWrapper: HTMLDivElement) {

@@ -19,19 +19,19 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.date.getDate()).toEqual(1);
     });
 
-    it('should return number of days in defined month', () => {
+    it('should return "30" as number of days in defined month', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getDaysInMonths()).toBe(30);
     });
 
-    it('should return full month name for default en-US locale', () => {
+    it('should return "November" for default en-US locale', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getMonthName()).toBe('November');
     });
 
-    it('should return full month name for polish locale', () => {
+    it('should return "listopad" for polish locale', () => {
         const dateHelper = new R6SchedulerDateHelpers(
             new Date('11/13/2011'),
             ['pl-PL'],
@@ -40,7 +40,7 @@ describe('R6Scheduler data logic', () => {
         expect(dateHelper.getMonthName()).toBe('listopad');
     });
 
-    it('should return year from defined date', () => {
+    it('should return "2011" from defined date', () => {
         const dateHelper = new R6SchedulerDateHelpers(new Date('11/13/2011'));
 
         expect(dateHelper.getYear()).toBe('2011');

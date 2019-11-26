@@ -30,11 +30,55 @@ describe('Check require parameters', () => {
     //     expect(gaps.after).toBe(1);
     // });
 
+    it('should return "1" as number of next month days to fill 7 cells in single row', () => {
+        const expectedValue = 1;
+        const numberOfDaysInNovember = 30;
+        const numberOfDaysBeforeNovemberToFillSingleRow = 4;
+        const content = new R6SchedulerDrawContent();
+        const numberOfCellsAfterDate = content.getCellsNumberAfter(numberOfDaysInNovember + numberOfDaysBeforeNovemberToFillSingleRow);
+
+        expect(numberOfCellsAfterDate).toBe(expectedValue);
+    });
+
+    it('should return "5" as number of next month days to fill 7 cells in single row', () => {
+        const expectedValue = 5;
+        const numberOfDaysInDecember = 31;
+        const numberOfDaysBeforeDecemberToFillSingleRow = 6;
+        const content = new R6SchedulerDrawContent();
+        const numberOfCellsAfterDate = content.getCellsNumberAfter(numberOfDaysInDecember + numberOfDaysBeforeDecemberToFillSingleRow);
+
+        expect(numberOfCellsAfterDate).toBe(expectedValue);
+    });
+
     it('should return [28, 29, 30, 31] as days to render before November 2019', () => {
         const expectedValue = [28, 29, 30, 31];
         const content = new R6SchedulerDrawContent();
-        const dateManager = content.prepareDataToDrawContent(new Date('11/13/2019'));
+        const valuesBeforeNovember = content.findValuesForCellsBeforeCurrentMonth(new Date('11/13/2019'), 4);
 
-        expect(dateManager.daysBefore).toEqual(expectedValue);
+        expect(valuesBeforeNovember).toEqual(expectedValue);
+    });
+
+    it('should return [25, 26, 27, 28, 29, 30] as days to render before December 2019', () => {
+        const expectedValue = [25, 26, 27, 28, 29, 30];
+        const content = new R6SchedulerDrawContent();
+        const valuesBeforeDecember = content.findValuesForCellsBeforeCurrentMonth(new Date('12/13/2019'), 6);
+
+        expect(valuesBeforeDecember).toEqual(expectedValue);
+    });
+
+    it('should return [1] as days to render after November 2019', () => {
+        const expectedValue = [1];
+        const content = new R6SchedulerDrawContent();
+        const valuesAfterNovember = content.findValuesForCellsAfterCurrentMonth(1);
+
+        expect(valuesAfterNovember).toEqual(expectedValue);
+    });
+
+    it('should return [1, 2, 3, 4, 5] as days to render after December 2019', () => {
+        const expectedValue = [1, 2, 3, 4, 5];
+        const content = new R6SchedulerDrawContent();
+        const valuesAfterNovember = content.findValuesForCellsAfterCurrentMonth(5);
+
+        expect(valuesAfterNovember).toEqual(expectedValue);
     });
 });

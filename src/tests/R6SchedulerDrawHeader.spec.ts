@@ -1,41 +1,54 @@
 import R6SchedulerDrawHeader from '../R6SchedulerDrawHeader';
 
 describe('R6SchedulerDrawHeader - html', () => {
-    it('should create html for header containing month and year set to November 2011', () => {
-        const header = new R6SchedulerDrawHeader();
+    let header: R6SchedulerDrawHeader = null;
 
+    beforeEach(() => {
+        header = new R6SchedulerDrawHeader();
         header.getInitialHtml(new Date('11/13/2011'));
+    });
 
+    it('should create html containing "r6-month-year-title" class', () => {
         expect(header.textWrapper.classList.contains('r6-month-year-title')).toBeTruthy();
-        expect(header.textWrapper.innerText).toBe('November / 2011');
+    });
+
+    it('should display title "November / 2011"', () => {
+        const expectedValue = 'November / 2011';
+
+        expect(header.textWrapper.innerText).toBe(expectedValue);
     });
 
     it('should update title to December 2011', () => {
-        const header = new R6SchedulerDrawHeader();
+        const expectedValue = 'December / 2011';
 
-        header.getInitialHtml(new Date('11/13/2011'));
         header.updateHeaderText(new Date('12/14/2011'));
 
-        expect(header.textWrapper.innerText).toBe('December / 2011');
+        expect(header.textWrapper.innerText).toBe(expectedValue);
     });
 });
 
-describe('R6SchedulerDrawHeader - logic', () => {
-    it('should call function when clicked prev button', () => {
-        const header = new R6SchedulerDrawHeader();
+describe('R6SchedulerDrawHeader - prev/next logic', () => {
+    it('should change value to "21" when clicked prev button', () => {
+        const expectedValue = 21;
+        let value = null;
+        const header = new R6SchedulerDrawHeader({
+            onPrevCallback: () => value = 21,
+        });
 
-        spyOn(header, 'onPrevClicked');
-        header.onPrevClicked();
+        header.onPrevCallback();
 
-        expect(header.onPrevClicked).toHaveBeenCalled();
+        expect(value).toBe(expectedValue);
     });
 
-    it('should call function when clicked next button', () => {
-        const header = new R6SchedulerDrawHeader();
+    it('should change value to "22" when clicked next button', () => {
+        const expectedValue = 22;
+        let value = null;
+        const header = new R6SchedulerDrawHeader({
+            onNextCallback: () => value = 22,
+        });
 
-        spyOn(header, 'onNextClicked');
-        header.onNextClicked();
+        header.onNextCallback();
 
-        expect(header.onNextClicked).toHaveBeenCalled();
+        expect(value).toBe(expectedValue);
     });
 });

@@ -1,13 +1,13 @@
 import R6SchedulerDateHelpers from './R6SchedulerDateHelpers';
 
 interface IR6SchedulerDrawHeader {
-    onNextCallback?: () => void;
     onPrevCallback?: () => void;
+    onNextCallback?: () => void;
 }
 
 export default class R6SchedulerDrawHeader {
-    private onPrevCallback: () => void;
-    private onNextCallback: () => void;
+    onPrevCallback: () => void;
+    onNextCallback: () => void;
     textWrapper: HTMLDivElement;
 
     constructor(
@@ -19,9 +19,6 @@ export default class R6SchedulerDrawHeader {
         this.onPrevCallback = onPrevCallback;
         this.onNextCallback = onNextCallback;
         this.textWrapper = null;
-
-        this.onPrevClicked = this.onPrevClicked.bind(this);
-        this.onNextClicked = this.onNextClicked.bind(this);
     }
 
     public getInitialHtml(date: Date) {
@@ -42,18 +39,10 @@ export default class R6SchedulerDrawHeader {
         wrapper.appendChild(this.textWrapper);
         wrapper.appendChild(next);
 
-        prev.addEventListener('click', this.onPrevClicked);
-        next.addEventListener('click', this.onNextClicked);
+        prev.addEventListener('click', this.onPrevCallback);
+        next.addEventListener('click', this.onNextCallback);
 
         return wrapper;
-    }
-
-    public onPrevClicked() {
-        this.onPrevCallback();
-    }
-
-    public onNextClicked() {
-        this.onNextCallback();
     }
 
     public updateHeaderText(date: Date) {
